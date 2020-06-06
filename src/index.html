@@ -9,8 +9,39 @@
 	<!-- <script defer src="./tfjs.ts"></script> -->
 </head>
 <body>
-	<button id="hit-button">Hit</button>
-	<button id="stand-button">Stand</button>
-	<button id="reset-button">Reset</button>
+	<nav class="bd-navbar navbar has-shadow is-spaced">
+		<div class="navbar-brand">
+			<img src="assets/logo.jpg" alt="Blackjack logo">
+		</div>
+	</nav>
+	<section class="section">
+		<div class="containter">
+			<div class="field is-grouped is-grouped-centered">
+				<p class="control">
+					<button class="button is-light" id="hit-button">Hit</button>
+				</p>
+				<p class="control">
+					<button class="button is-light" id="stand-button">Stand</button>
+				</p>
+				<p class="control">
+					<button class="button is-info" id="reset-button">Reset</button>
+				</p>
+			</div>
+		</div>
+	</section>
+	<footer class="footer">
+		<div class="content has-text-centered">
+			<p>
+				<strong>BlackJackRL</strong> by the
+				<a href="https://uais.dev/" target="_blank" rel="noopener noreferrer">
+					Undergraduate Artificial Intelligence Society
+				</a>.
+				This project is licensed under
+				<a href="https://raw.githubusercontent.com/UndergraduateArtificialIntelligenceClub/blackjackRL/master/LICENSE" target="_blank" rel="noopener noreferrer">
+					GNU General Public License v3.0
+				</a>.
+			</p>
+		</div>
+	</footer>
 </body>
 </html>
