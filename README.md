@@ -4,7 +4,7 @@
 ```sh
 sudo npm i -g parcel-bundler
 npm i
- ```
+```
 
 ## Run the development server
 ```sh
