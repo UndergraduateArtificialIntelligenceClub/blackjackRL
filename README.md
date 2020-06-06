@@ -15,3 +15,9 @@ npm run dev
 ```sh
 npm run build
 ```
+
+## Deploy to Github Pages
+```
+npm run build
+npm run deploy
+```
