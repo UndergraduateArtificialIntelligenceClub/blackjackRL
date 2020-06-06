@@ -6,10 +6,6 @@ const DEALER_INITIAL_FACEDOWN = 1
 const DEALER_INITIAL_FACEUP = 1
 const PLAYER_INITIAL_CARDS = 2
 
-const hitButton: HTMLButtonElement = document.querySelector("#hit-button")
-const standButton: HTMLButtonElement = document.querySelector("#stand-button")
-const resetButton: HTMLButtonElement = document.querySelector("#reset-button")
-
 type Suit = 'diamond' | 'club' | 'spade' | 'heart'
 
 export enum Rank {
@@ -225,18 +221,4 @@ export class Game {
 		}
 		return cards
 	}
-}
-
-const game = new Game()
-
-hitButton.onclick = function() {
-	game.playerHit()
-}
-
-standButton.onclick = function() {
-	game.playerStand()
-}
-
-resetButton.onclick = function() {
-	game.resetGame()
 }
