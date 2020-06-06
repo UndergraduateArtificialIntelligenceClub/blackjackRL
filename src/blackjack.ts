@@ -22,7 +22,7 @@ export class Card {
 	faceDown: boolean = false
 	value: number
 	repr: string
-	 
+
 	constructor(public suit: Suit, public rank: Rank) {
 		if (this.rank < Rank.ace) {
 			this.value = this.rank
@@ -84,7 +84,7 @@ export class Game {
 			this.deck[j] = temp
 		}
 	}
-	
+
 	resetGame() {
 		this.gameOver = false
 		this.newDeck()
@@ -111,7 +111,7 @@ export class Game {
 			this.playerHand.push(this.deck.pop())
 		}
 	}
-	
+
 	playerHit() {
 		if (this.gameOver) {
 			return
@@ -132,7 +132,7 @@ export class Game {
 			this.playerLosses++
 		}
 	}
-	
+
 	playerStand() {
 		if (this.gameOver) {
 			return
@@ -163,7 +163,7 @@ export class Game {
 		} else {
 			const dealerValue = this.bestValue(dealerHandValues)
 			const playerValue = this.bestValue(playerHandValues)
-	
+
 			if (dealerValue > playerValue) {
 				console.log('Player loses!')
 				this.playerLosses++
@@ -197,14 +197,14 @@ export class Game {
 		}
 		return best
 	}
-	
+
 	// return all possible values of the hand (aces being 1 or 11)
 	getHandValues(hand: Array<Card>): Array<number> {
 		let handValues: Array<number> = []
-		
+
 		let flatValues = 0
 		let numAces = 0
-		
+
 		for (const card of hand) {
 			if (card.rank == Rank.ace) {
 				numAces += 1
@@ -212,15 +212,15 @@ export class Game {
 				flatValues += card.value
 			}
 		}
-		
+
 		handValues.push(flatValues)
-		
+
 		for (let i = 0; i < numAces; i++) {
 			let ace1 = handValues.map(x => x + 1)
 			let ace11 = handValues.map(x => x + 11)
 			handValues = ace1.concat(ace11)
 		}
-		
+
 		return handValues
 	}
 
