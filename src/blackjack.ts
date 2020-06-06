@@ -56,6 +56,10 @@ export class Game {
 	dealerHand: Array<Card>
 	gameOver: boolean
 
+	playerWins = 0
+	playerLosses = 0
+	playerDraws = 0
+
 	constructor() {
 		this.resetGame()
 	}
@@ -125,6 +129,7 @@ export class Game {
 			console.log('Player bust!')
 			console.log('Player loses!')
 			this.gameOver = true
+			this.playerLosses++
 		}
 	}
 	
@@ -154,22 +159,27 @@ export class Game {
 			// dealer busted
 			console.log('Dealer bust!')
 			console.log('Player wins!')
+			this.playerWins++
 		} else {
 			const dealerValue = this.bestValue(dealerHandValues)
 			const playerValue = this.bestValue(playerHandValues)
 	
 			if (dealerValue > playerValue) {
 				console.log('Player loses!')
+				this.playerLosses++
 			} else if (dealerValue < playerValue) {
 				console.log('Player wins!')
+				this.playerWins++
 			} else {
-				console.log('Tie!')
+				console.log('Draw!')
+				this.playerDraws++
 			}
 		}
 	}
 
 	logHands() {
 		console.clear()
+		console.log(`${this.playerWins}W, ${this.playerLosses}L, ${this.playerDraws}D`)
 		console.log(`Dealer hand:\n${this.dealerHand.map(x => x.repr)}`)
 		console.log(`Dealer hand values:\n${this.getHandValues(this.dealerHand)}`)
 		console.log()
