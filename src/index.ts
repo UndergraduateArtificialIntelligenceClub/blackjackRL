@@ -1,1 +1,1 @@
-import { Rank, Card, Game } from './blacjack'
+import { Rank, Card, Game } from './blackjack'
