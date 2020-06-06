@@ -1,0 +1,27 @@
+{
+  "name": "blackjackRL",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UndergraduateArtificialIntelligenceClub/blackjackRL.git"
+  },
+  "keywords": [
+    "blackjack",
+    "reinforcement learning"
+  ],
+  "author": "Undergraduate Artificial Intelligence Society",
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/UndergraduateArtificialIntelligenceClub/blackjackRL/issues"
+  },
+  "homepage": "https://github.com/UndergraduateArtificialIntelligenceClub/blackjackRL#readme",
+  "devDependencies": {
+    "typescript": "^3.9.5"
+  }
+}
