@@ -1,11 +1,5 @@
 // blackjack game
 
-const DEALER_STAND_THRESHOLD = 17
-const MAX_HAND_VALUE = 21
-const DEALER_INITIAL_FACEDOWN = 1
-const DEALER_INITIAL_FACEUP = 1
-const PLAYER_INITIAL_CARDS = 2
-
 type Suit = 'diamond' | 'club' | 'spade' | 'heart'
 
 export enum Rank {
@@ -51,6 +45,12 @@ export class Card {
 }
 
 export class Game {
+	DEALER_STAND_THRESHOLD = 17
+	MAX_HAND_VALUE = 21
+	DEALER_INITIAL_FACEDOWN = 1
+	DEALER_INITIAL_FACEUP = 1
+	PLAYER_INITIAL_CARDS = 2
+
 	deck: Array<Card>
 	playerHand: Array<Card>
 	dealerHand: Array<Card>
@@ -99,15 +99,15 @@ export class Game {
 
 	dealInitialHands() {
 		// deal dealer hand
-		for (let i = 0; i < DEALER_INITIAL_FACEDOWN; i++) {
+		for (let i = 0; i < this.DEALER_INITIAL_FACEDOWN; i++) {
 			this.dealerHand.push(this.deck.pop())
 		}
-		for (let i = 0; i < DEALER_INITIAL_FACEUP; i++) {
+		for (let i = 0; i < this.DEALER_INITIAL_FACEUP; i++) {
 			this.dealerHand.push(this.deck.pop())
 		}
 
 		// deal player hand
-		for (let i = 0; i < PLAYER_INITIAL_CARDS; i++) {
+		for (let i = 0; i < this.PLAYER_INITIAL_CARDS; i++) {
 			this.playerHand.push(this.deck.pop())
 		}
 	}
@@ -124,7 +124,7 @@ export class Game {
 
 		this.logHands()
 
-		if ((Math.min(...playerHandValues)) > MAX_HAND_VALUE) {
+		if ((Math.min(...playerHandValues)) > this.MAX_HAND_VALUE) {
 			// player busted
 			console.log('Player bust!')
 			console.log('Player loses!')
@@ -141,7 +141,7 @@ export class Game {
 		let dealerHandValues = this.getHandValues(this.dealerHand)
 		let dealerHandValue = this.bestValue(dealerHandValues)
 
-		while (dealerHandValue <= DEALER_STAND_THRESHOLD) {
+		while (dealerHandValue <= this.DEALER_STAND_THRESHOLD) {
 			const card = this.deck.pop()
 			this.dealerHand.push(card)
 
@@ -155,7 +155,7 @@ export class Game {
 
 		this.logHands()
 
-		if ((Math.min(...dealerHandValues)) > MAX_HAND_VALUE) {
+		if ((Math.min(...dealerHandValues)) > this.MAX_HAND_VALUE) {
 			// dealer busted
 			console.log('Dealer bust!')
 			console.log('Player wins!')
@@ -191,7 +191,7 @@ export class Game {
 	bestValue(handValues: Array<number>): number {
 		let best = Math.min(...handValues)
 		for (const handValue of handValues) {
-			if (handValue > best && handValue <= MAX_HAND_VALUE) {
+			if (handValue > best && handValue <= this.MAX_HAND_VALUE) {
 				best = handValue
 			}
 		}

@@ -23,11 +23,12 @@
   },
   "homepage": "https://github.com/UndergraduateArtificialIntelligenceClub/blackjackRL#readme",
   "devDependencies": {
+    "@tensorflow/tfjs": "^2.0.0",
     "bulma": "^0.8.2",
     "cssnano": "^4.1.10",
-    "sass": "^1.26.8",
-    "typescript": "^3.9.5",
     "gh-pages": "^3.0.0",
-    "parcel-plugin-clean-dist": "0.0.6"
+    "parcel-plugin-clean-dist": "0.0.6",
+    "sass": "^1.26.8",
+    "typescript": "^3.9.5"
   }
 }

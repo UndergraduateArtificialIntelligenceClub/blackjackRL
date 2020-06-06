@@ -1,11 +1,10 @@
 {
-	"compilerOptions": {
-		"baseUrl": "./src",
-		"paths": {
-			"~*": ["./*"]
-		},
-		"include": ["src/**/*"],
-		"target": "esnext",
-		"watch": true
-	}
+    "compilerOptions": {
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "target": "es6",
+        "moduleResolution": "node",
+        "lib": ["es6", "dom"]
+    },
+    "include": ["./src/**/*.ts"]
 }
