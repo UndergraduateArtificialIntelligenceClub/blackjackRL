@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/UndergraduateArtificialIntelligenceClub/blackjackRL#readme",
   "devDependencies": {
+    "bulma": "^0.8.2",
+    "sass": "^1.26.8",
     "typescript": "^3.9.5"
   }
 }
