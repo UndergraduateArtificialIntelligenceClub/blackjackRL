@@ -3,7 +3,7 @@ import { Game } from './blackjack'
 const game = new Game()
 
 // Define a model for linear regression.
-const model = tf.sequential();
+const model = tf.sequential()
 model.add(tf.layers.dense({
 	units: 21,
 	activation: 'sigmoid',
@@ -42,7 +42,7 @@ const train = (RUNS: number) => {
 	// Train the model using the data.
 	console.log('%c Training...', 'font-size: 16px')
 	model.fit(tf.tensor2d(xs), tf.tensor2d(ys), {
-		epochs: 1024
+		epochs: 10
 		shuffle: true
 	}).then((resp) => {
 		// Open the browser devtools to see the output
@@ -51,11 +51,13 @@ const train = (RUNS: number) => {
 		console.table(resp.history.loss)
 		// Use the model to do inference on a data point the model hasn't seen before:
 		document.querySelector('#train-button').classList.remove('is-loading')
+		document.querySelector('#play-button').disabled = false
 	})
 }
 
 const computer = (input: Array<number>) => {
-	return model.predict(tf.tensor2d([input]))
+	const prediction = model.predict(tf.tensor2d([input]))
+	return prediction.arraySync()[0][0]
 }
 
 export { computer, train }

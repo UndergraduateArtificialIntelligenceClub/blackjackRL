@@ -3,6 +3,7 @@ import * as tf from '@tensorflow/tfjs'
 import { computer, train } from './tfjs'
 
 const trainButton: HTMLButtonElement = document.querySelector('#train-button')
+const playButton: HTMLButtonElement = document.querySelector('#play-button')
 const hitButton: HTMLButtonElement = document.querySelector("#hit-button")
 const standButton: HTMLButtonElement = document.querySelector("#stand-button")
 const resetButton: HTMLButtonElement = document.querySelector("#reset-button")
@@ -23,5 +24,16 @@ resetButton.onclick = _ => {
 
 trainButton.onclick = _ => {
 	trainButton.classList.add('is-loading')
-	train(1000)
+	playButton.disabled = true
+	train(1024)
+}
+
+playButton.onclick = _ => {
+	const threshold = .8
+	while (!game.gameOver) {
+		const prediction = computer(game.state)
+		console.log(prediction)
+		if (prediction > threshold) game.playerStand()
+		else game.playerHit()
+	}
 }
