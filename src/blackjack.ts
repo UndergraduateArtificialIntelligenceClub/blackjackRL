@@ -1,4 +1,5 @@
 // blackjack game
+import { EventEmitter } from 'events'
 
 type Suit = 'diamond' | 'club' | 'spade' | 'heart'
 
@@ -42,6 +43,14 @@ export class Card {
 			this.repr = 'A'
 		}
 	}
+
+	render() {
+		let card = document.createElement('div')
+		card.classList.add('blackjack-card')
+		card.classList.add(`suit-${this.suit}`)
+		card.innerHTML = `<span>${this.repr}</span><span id="suit"></span>`
+		return card
+	}
 }
 
 export class Game {
@@ -51,6 +60,7 @@ export class Game {
 	DEALER_INITIAL_FACEUP = 1
 	PLAYER_INITIAL_CARDS = 2
 
+	events: EventEmitter
 	deck: Array<Card>
 	playerHand: Array<Card>
 	dealerHand: Array<Card>
@@ -61,6 +71,14 @@ export class Game {
 	playerDraws = 0
 
 	constructor() {
+		this.events = new EventEmitter()
+		this.events.on('player-dealt', () => {
+			let ph = document.querySelector('#blackjack-player')
+			ph.innerHTML = ''
+			for (const card of this.playerHand) {
+				ph.append(card.render())
+			}
+		})
 		this.resetGame()
 	}
 
@@ -72,7 +90,6 @@ export class Game {
 				this.deck.push(new Card(suit, rank))
 			}
 		}
-		this.shuffleDeck()
 	}
 
 	shuffleDeck(): void {
@@ -110,6 +127,7 @@ export class Game {
 		for (let i = 0; i < this.PLAYER_INITIAL_CARDS; i++) {
 			this.playerHand.push(this.deck.pop())
 		}
+		this.events.emit('player-dealt')
 	}
 
 	playerHit() {
@@ -131,6 +149,7 @@ export class Game {
 			this.gameOver = true
 			this.playerLosses++
 		}
+		this.events.emit('player-dealt')
 	}
 
 	playerStand() {

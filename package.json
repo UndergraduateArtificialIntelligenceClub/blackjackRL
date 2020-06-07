@@ -30,5 +30,8 @@
     "parcel-plugin-clean-dist": "0.0.6",
     "sass": "^1.26.8",
     "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.13.0"
   }
 }
