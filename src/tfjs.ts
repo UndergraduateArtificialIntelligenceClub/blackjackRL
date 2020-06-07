@@ -1,4 +1,6 @@
-import * as tf from '@tensorflow/tfjs';
+import * as tf from '@tensorflow/tfjs'
+import { Game } from './blackjack'
+const game = new Game()
 
 // Define a model for linear regression.
 const model = tf.sequential();
@@ -17,18 +19,29 @@ model.compile({
 	optimizer: tf.train.sgd(0.1)
 })
 
+// Run 100 games
+const RUNS = 100
+const results = []
+for (let run = 0; run < RUNS; run++) {
+	const hitAmount = Math.floor(Math.random() * 3)
+	for (let hit = 0; hit < hitAmount; hit++) {
+		game.playerHit()
+	}
+	game.playerStand()
+	results.push(game.result)
+}
+
 // Generate some synthetic data for training.
-const xs = tf.tensor2d([
-		[4, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-		[1, 10, 8, 0, 0, 0, 0, 0, 0, 0],
-])
-const ys = tf.tensor2d([
-	[10],
-	[-5],
-])
+console.log(game.state)
+const xs = []
+const ys = []
+results.forEach(r => {
+	xs.push(r.state)
+	ys.push([r.reward])
+})
 
 // Train the model using the data.
-model.fit(xs, ys, {
+model.fit(tf.tensor2d(xs), tf.tensor2d(ys), {
 	epochs: 64
 	shuffle: true
 }).then((resp) => {

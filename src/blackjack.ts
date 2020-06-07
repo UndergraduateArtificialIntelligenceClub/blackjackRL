@@ -87,6 +87,7 @@ export class Game {
 	playerHand: Array<Card>
 	dealerHand: Array<Card>
 	gameOver: boolean
+	gameResult: number
 
 	playerWins = 0
 	playerLosses = 0
@@ -115,15 +116,18 @@ export class Game {
 		this.events.on('player-won' _ => {
 			title.innerText = 'You won! 😁'
 			stats.querySelector('#w').innerText = this.playerWins
+			this.gameResult = 10
 		})
 		this.events.on('player-lost' _ => {
 			title.innerText = 'You lost! 🙁'
 			stats.querySelector('#l').innerText = this.playerLosses
 			this.events.emit('dealer-dealt')
+			this.gameResult = -5
 		})
 		this.events.on('player-tied' _ => {
 			title.innerText = 'You tied! 😶'
 			stats.querySelector('#d').innerText = this.playerDraws
+			this.gameResult = 1
 		})
 		this.events.on('game-finished', _ => {
 			for (const button of document.querySelectorAll('button.is-light')) {
@@ -161,6 +165,7 @@ export class Game {
 		this.shuffleDeck()
 		this.playerHand = []
 		this.dealerHand = []
+		this.gameResult = 0
 
 		this.dealInitialHands()
 
@@ -273,7 +278,6 @@ export class Game {
 		console.log(`Player hand:\n${this.playerHand.map(x => x.repr)}`)
 		console.log(`Player hand values:\n${this.getHandValues(this.playerHand)}`)
 		console.log()
-		console.table(this.state)
 	}
 
 	bestValue(handValues: Array<number>): number {
@@ -331,5 +335,11 @@ export class Game {
 			cards.push(0)
 		}
 		return cards
+	}
+
+	get result(): {state: Array<number>, reward: number} {
+		const state = this.state
+		const reward = this.gameResult
+		return {state, reward}
 	}
 }
