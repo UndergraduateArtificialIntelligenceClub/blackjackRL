@@ -1,5 +1,9 @@
 // blackjack game
 import { EventEmitter } from 'events'
+import diamondIMG from './assets/diamond.svg'
+import clubIMG from './assets/club.svg'
+import spadeIMG from './assets/spade.svg'
+import heartIMG from './assets/heart.svg'
 
 type Suit = 'diamond' | 'club' | 'spade' | 'heart'
 
@@ -48,7 +52,22 @@ export class Card {
 		let card = document.createElement('div')
 		card.classList.add('blackjack-card')
 		card.classList.add(`suit-${this.suit}`)
-		card.innerHTML = `<span>${this.repr}</span><span id="suit"></span>`
+		let img: NodeModule
+		switch(this.suit) {
+			case 'diamond':
+				img = diamondIMG
+				break
+			case 'club':
+				img = clubIMG
+				break
+			case 'spade':
+				img = spadeIMG
+				break
+			case 'heart':
+				img = heartIMG
+				break
+		}
+		card.innerHTML = `<span>${this.repr}</span><img src="${img}"/>`
 		return card
 	}
 }

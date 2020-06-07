@@ -1,12 +1,6 @@
-@import '../node_modules/bulma/sass/utilities/derived-variables.sass'
-@import '../node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss'
-@import '../node_modules/@fortawesome/fontawesome-free/scss/solid.scss'
-@import '../node_modules/@fortawesome/fontawesome-free/scss/brands.scss'
-@import '../node_modules/@fortawesome/fontawesome-free/scss/regular.scss'
-
 .blackjack-card
-	width: 57mm
-	height: 89mm
+	width: 30mm
+	height: 40mm
 	background: $light
 	$spacing: 2px
 	margin: $spacing
@@ -14,23 +8,17 @@
 	padding: 10px
 	font-size: 2rem
 
+	span
+		font-size: 1.5em
+
+	img
+		height: 1em
+
 .suit-diamond, .suit-heart
 	color: red
 
 .suit-club, .suit-spade
 	color: black
-
-@mixin suit
-	@extend %fa-icon
-	@extend .fas
-
-$suits: ( diamond: $fa-var-gem, heart: $fa-var-heart, club: \f327, spade: \f2f4 )
-
-@each $suit, $var in $suits
-	.suit-#{$suit} #suit
-		@include suit
-		&:before
-			content: fa-content($var)
 
 #blackjack-player
 	display: flex
