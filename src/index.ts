@@ -6,14 +6,14 @@ const resetButton: HTMLButtonElement = document.querySelector("#reset-button")
 
 const game = new blackjack.Game()
 
-hitButton.onclick = function() {
+hitButton.onclick = _ => {
 	game.playerHit()
 }
 
-standButton.onclick = function() {
+standButton.onclick = _ => {
 	game.playerStand()
 }
 
-resetButton.onclick = function() {
+resetButton.onclick = _ => {
 	game.resetGame()
 }
