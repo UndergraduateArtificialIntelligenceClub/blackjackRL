@@ -48,26 +48,30 @@ export class Card {
 		}
 	}
 
-	render() {
+	render(show = true) {
 		let card = document.createElement('div')
 		card.classList.add('blackjack-card')
-		card.classList.add(`suit-${this.suit}`)
-		let img: NodeModule
-		switch(this.suit) {
-			case 'diamond':
-				img = diamondIMG
-				break
-			case 'club':
-				img = clubIMG
-				break
-			case 'spade':
-				img = spadeIMG
-				break
-			case 'heart':
-				img = heartIMG
-				break
+		if (show) {
+			card.classList.add(`suit-${this.suit}`)
+			let img: NodeModule
+			switch(this.suit) {
+				case 'diamond':
+					img = diamondIMG
+					break
+				case 'club':
+					img = clubIMG
+					break
+				case 'spade':
+					img = spadeIMG
+					break
+				case 'heart':
+					img = heartIMG
+					break
+			}
+			card.innerHTML = `<span>${this.repr}</span><img src="${img}"/>`
+		} else {
+			card.classList.add('hide')
 		}
-		card.innerHTML = `<span>${this.repr}</span><img src="${img}"/>`
 		return card
 	}
 }
@@ -98,10 +102,36 @@ export class Game {
 				ph.append(card.render())
 			}
 		})
+		this.events.on('dealer-dealt', _ => {
+			let dh = document.querySelector('#blackjack-dealer')
+			let showCard = true
+			dh.innerHTML = ''
+			for (const card of this.dealerHand) {
+				dh.append(card.render(showCard))
+				if (!this.gameOver && showCard) showCard = false
+			}
+		})
+		const title = document.querySelector('#blackjack-state')
+		const stats = document.querySelector('#blackjack-stats')
+		this.events.on('player-won' _ => {
+			title.innerText = 'You won! 😁'
+			stats.querySelector('#w').innerText = this.playerWins
+		})
+		this.events.on('player-lost' _ => {
+			title.innerText = 'You lost! 🙁'
+			stats.querySelector('#l').innerText = this.playerLosses
+			this.events.emit('dealer-dealt')
+		})
+		this.events.on('player-tied' _ => {
+			title.innerText = 'You tied! 😶'
+			stats.querySelector('#d').innerText = this.playerDraws
+		})
 		this.events.on('game-finished', _ => {
 			for (const button of document.querySelectorAll('button.is-light')) {
 				button.disabled = true
 			}
+			let total = this.playerWins + this.playerLosses + this.playerDraws + 1
+			stats.querySelector('#t').innerText = 1
 		})
 		this.resetGame()
 	}
@@ -140,6 +170,7 @@ export class Game {
 		for (const button of document.querySelectorAll('button.is-light')) {
 			button.disabled = false
 		}
+		document.querySelector('#blackjack-state').innerText = 'Playing 🃏'
 	}
 
 	dealInitialHands() {
@@ -156,6 +187,7 @@ export class Game {
 			this.playerHand.push(this.deck.pop())
 		}
 		this.events.emit('player-dealt')
+		this.events.emit('dealer-dealt')
 	}
 
 	playerHit() {
@@ -177,6 +209,7 @@ export class Game {
 			this.gameOver = true
 			this.events.emit('game-finished')
 			this.playerLosses++
+			this.events.emit('player-lost')
 		}
 		this.events.emit('player-dealt')
 	}
@@ -189,6 +222,9 @@ export class Game {
 		let dealerHandValues = this.getHandValues(this.dealerHand)
 		let dealerHandValue = this.bestValue(dealerHandValues)
 
+		this.gameOver = true
+		this.events.emit('game-finished')
+
 		while (dealerHandValue <= this.DEALER_STAND_THRESHOLD) {
 			const card = this.deck.pop()
 			this.dealerHand.push(card)
@@ -196,9 +232,7 @@ export class Game {
 			dealerHandValues = this.getHandValues(this.dealerHand)
 			dealerHandValue = this.bestValue(dealerHandValues)
 		}
-
-		this.gameOver = true
-		this.events.emit('game-finished')
+		this.events.emit('dealer-dealt')
 
 		const playerHandValues = this.getHandValues(this.playerHand)
 
@@ -209,6 +243,7 @@ export class Game {
 			console.log('Dealer bust!')
 			console.log('Player wins!')
 			this.playerWins++
+			this.events.emit('player-won')
 		} else {
 			const dealerValue = this.bestValue(dealerHandValues)
 			const playerValue = this.bestValue(playerHandValues)
@@ -216,12 +251,15 @@ export class Game {
 			if (dealerValue > playerValue) {
 				console.log('Player loses!')
 				this.playerLosses++
+				this.events.emit('player-lost')
 			} else if (dealerValue < playerValue) {
 				console.log('Player wins!')
 				this.playerWins++
+				this.events.emit('player-won')
 			} else {
 				console.log('Draw!')
 				this.playerDraws++
+				this.events.emit('player-tied')
 			}
 		}
 	}

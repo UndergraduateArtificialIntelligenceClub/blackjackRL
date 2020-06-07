@@ -1,4 +1,6 @@
-.blackjack-card
+$bj: blackjack
+
+.#{$bj}-card
 	width: 30mm
 	height: 40mm
 	background: $light
@@ -7,6 +9,11 @@
 	border-radius: 10px
 	padding: 10px
 	font-size: 2rem
+
+	&.hide
+		background: $info
+		outline: 1mm solid $light
+		outline-offset: -5mm
 
 	span
 		font-size: 1.5em
@@ -20,6 +27,16 @@
 .suit-club, .suit-spade
 	color: black
 
-#blackjack-player
+@mixin cards
 	display: flex
 	justify-content: center
+	margin-bottom: 1rem
+
+##{$bj}-player
+	@include cards
+
+##{$bj}-dealer
+	@include cards
+
+##{$bj}-stats
+	margin-top: 1rem

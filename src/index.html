@@ -17,8 +17,17 @@
 		</div>
 	</nav>
 	<section class="section">
-		<div class="container" id="blackjack-player">
+		<div class="content is-large">
+			<h1 class="has-text-centered" id="blackjack-state"></h1>
 		</div>
+		<div class="content is-medium">
+			<h1 class="has-text-centered">Dealer</h1>
+		</div>
+		<div class="container" id="blackjack-dealer"></div>
+		<div class="content is-medium">
+			<h1 class="has-text-centered">You</h1>
+		</div>
+		<div class="container" id="blackjack-player"></div>
 		<div class="containter">
 			<div class="field is-grouped is-grouped-centered">
 				<p class="control">
@@ -31,6 +40,26 @@
 					<button class="button is-info" id="reset-button">Reset</button>
 				</p>
 			</div>
+		</div>
+		<div class="container field is-grouped is-grouped-centered" id="blackjack-stats">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Total Games</th>
+						<th><abbr title="Wins">W</abbr></th>
+						<th><abbr title="Losses">L</abbr></th>
+						<th><abbr title="Draws">D</abbr></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td id="t">0</td>
+						<td id="w">0</td>
+						<td id="l">0</td>
+						<td id="d">0</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</section>
 	<footer class="footer">
