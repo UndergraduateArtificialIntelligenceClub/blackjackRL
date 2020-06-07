@@ -19,3 +19,5 @@ standButton.onclick = _ => {
 resetButton.onclick = _ => {
 	game.resetGame()
 }
+
+computer(game.state).print()

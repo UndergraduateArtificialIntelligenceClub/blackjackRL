@@ -19,26 +19,29 @@ model.compile({
 
 // Generate some synthetic data for training.
 const xs = tf.tensor2d([
-		[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-		[4, 1, 2, 1, 2, 3, 1, 5, 1, 2],
-], [2, 10])
+		[4, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+		[1, 10, 8, 0, 0, 0, 0, 0, 0, 0],
+])
 const ys = tf.tensor2d([
-	[1000],
-	[1],
-], [2, 1])
+	[10],
+	[-5],
+])
 
 // Train the model using the data.
-model.fit(xs, ys, {epochs: 4}).then((resp) => {
-	// Use the model to do inference on a data point the model hasn't seen before:
-	//model.predict(tf.tensor2d([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], [1, 10])).print()
+model.fit(xs, ys, {
+	epochs: 64
+	shuffle: true
+}).then((resp) => {
 	// Open the browser devtools to see the output
-	console.log('%c Training History:', 'color: #6060e0; font-size: 18px;')
-	console.table(resp.history)
-	model.predict(tf.tensor2d([1,2,3,4,5,6,7,8,9,0],[1, 10])).print()
+	const loss = resp.history.loss[resp.history.loss.length - 1]
+	console.log(`%c Model Loss: ${loss}`, 'color: #6060e0; font-size: 18px;')
+	console.table(resp.history.loss)
+	// Use the model to do inference on a data point the model hasn't seen before:
+	model.predict(tf.tensor2d([[10,2,3,4,0,0,0,0,0,0]])).print()
 });
 
-const computer = (input: Array<any>) => {
-	return model.predict(tf.tensor2d(input, [1, 10]))
+const computer = (input: Array<number>) => {
+	return model.predict(tf.tensor2d([input]))
 }
 
 export { computer }

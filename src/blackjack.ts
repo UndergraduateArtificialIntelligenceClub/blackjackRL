@@ -24,7 +24,6 @@ export enum Rank {
 }
 
 export class Card {
-	faceDown: boolean = false
 	value: number
 	repr: string
 
@@ -274,6 +273,7 @@ export class Game {
 		console.log(`Player hand:\n${this.playerHand.map(x => x.repr)}`)
 		console.log(`Player hand values:\n${this.getHandValues(this.playerHand)}`)
 		console.log()
+		console.table(this.state)
 	}
 
 	bestValue(handValues: Array<number>): number {
@@ -316,6 +316,19 @@ export class Game {
 		const cards = []
 		for (let i = 0; i < amount; i++) {
 			cards.push(this.deck.pop())
+		}
+		return cards
+	}
+
+	get state(): Array<number> {
+		const cards = []
+		cards.push(this.dealerHand[0].value)
+		for (const playerCard of this.playerHand) {
+			cards.push(playerCard.value)
+		}
+		// fill the rest with empty values
+		for (let i = cards.length; i < 10; i++) {
+			cards.push(0)
 		}
 		return cards
 	}
