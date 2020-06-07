@@ -91,11 +91,16 @@ export class Game {
 
 	constructor() {
 		this.events = new EventEmitter()
-		this.events.on('player-dealt', () => {
+		this.events.on('player-dealt', _ => {
 			let ph = document.querySelector('#blackjack-player')
 			ph.innerHTML = ''
 			for (const card of this.playerHand) {
 				ph.append(card.render())
+			}
+		})
+		this.events.on('game-finished', _ => {
+			for (const button of document.querySelectorAll('button.is-light')) {
+				button.disabled = true
 			}
 		})
 		this.resetGame()
@@ -131,6 +136,10 @@ export class Game {
 		this.dealInitialHands()
 
 		this.logHands()
+
+		for (const button of document.querySelectorAll('button.is-light')) {
+			button.disabled = false
+		}
 	}
 
 	dealInitialHands() {
@@ -166,6 +175,7 @@ export class Game {
 			console.log('Player bust!')
 			console.log('Player loses!')
 			this.gameOver = true
+			this.events.emit('game-finished')
 			this.playerLosses++
 		}
 		this.events.emit('player-dealt')
@@ -188,6 +198,7 @@ export class Game {
 		}
 
 		this.gameOver = true
+		this.events.emit('game-finished')
 
 		const playerHandValues = this.getHandValues(this.playerHand)
 
@@ -217,6 +228,7 @@ export class Game {
 
 	logHands() {
 		console.clear()
+		console.log('Game state: ' + this.gameOver)
 		console.log(`${this.playerWins}W, ${this.playerLosses}L, ${this.playerDraws}D`)
 		console.log(`Dealer hand:\n${this.dealerHand.map(x => x.repr)}`)
 		console.log(`Dealer hand values:\n${this.getHandValues(this.dealerHand)}`)
