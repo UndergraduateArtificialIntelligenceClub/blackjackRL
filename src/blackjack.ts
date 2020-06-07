@@ -169,7 +169,7 @@ export class Game {
 
 		this.dealInitialHands()
 
-		//this.logHands()
+		if (window.DEBUG) this.logHands()
 
 		for (const button of document.querySelectorAll('button.is-light')) {
 			button.disabled = false
@@ -204,12 +204,14 @@ export class Game {
 
 		const playerHandValues = this.getHandValues(this.playerHand)
 
-		//this.logHands()
+		if (window.DEBUG) this.logHands()
 
 		if ((Math.min(...playerHandValues)) > this.MAX_HAND_VALUE) {
 			// player busted
-			console.log('Player bust!')
-			console.log('Player loses!')
+			if (window.DEBUG) {
+				console.log('Player bust!')
+				console.log('Player loses!')
+			}
 			this.gameOver = true
 			this.events.emit('game-finished')
 			this.playerLosses++
@@ -240,12 +242,14 @@ export class Game {
 
 		const playerHandValues = this.getHandValues(this.playerHand)
 
-		//this.logHands()
+		if (window.DEBUG) this.logHands()
 
 		if ((Math.min(...dealerHandValues)) > this.MAX_HAND_VALUE) {
 			// dealer busted
-			console.log('Dealer bust!')
-			console.log('Player wins!')
+			if (window.DEBUG) {
+				console.log('Dealer bust!')
+				console.log('Player wins!')
+			}
 			this.playerWins++
 			this.events.emit('player-won')
 		} else {
@@ -253,15 +257,15 @@ export class Game {
 			const playerValue = this.bestValue(playerHandValues)
 
 			if (dealerValue > playerValue) {
-				console.log('Player loses!')
+				if (window.DEBUG) console.log('Player loses!')
 				this.playerLosses++
 				this.events.emit('player-lost')
 			} else if (dealerValue < playerValue) {
-				console.log('Player wins!')
+				if (window.DEBUG) console.log('Player wins!')
 				this.playerWins++
 				this.events.emit('player-won')
 			} else {
-				console.log('Draw!')
+				if (window.DEBUG) console.log('Draw!')
 				this.playerDraws++
 				this.events.emit('player-tied')
 			}
