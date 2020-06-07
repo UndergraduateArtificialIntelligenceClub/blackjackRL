@@ -42,7 +42,7 @@ const train = (RUNS: number) => {
 	// Train the model using the data.
 	console.log('%c Training...', 'font-size: 16px')
 	model.fit(tf.tensor2d(xs), tf.tensor2d(ys), {
-		epochs: 64
+		epochs: 1024
 		shuffle: true
 	}).then((resp) => {
 		// Open the browser devtools to see the output
