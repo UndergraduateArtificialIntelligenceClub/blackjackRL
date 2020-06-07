@@ -169,7 +169,7 @@ export class Game {
 
 		this.dealInitialHands()
 
-		this.logHands()
+		//this.logHands()
 
 		for (const button of document.querySelectorAll('button.is-light')) {
 			button.disabled = false
@@ -204,7 +204,7 @@ export class Game {
 
 		const playerHandValues = this.getHandValues(this.playerHand)
 
-		this.logHands()
+		//this.logHands()
 
 		if ((Math.min(...playerHandValues)) > this.MAX_HAND_VALUE) {
 			// player busted
@@ -240,7 +240,7 @@ export class Game {
 
 		const playerHandValues = this.getHandValues(this.playerHand)
 
-		this.logHands()
+		//this.logHands()
 
 		if ((Math.min(...dealerHandValues)) > this.MAX_HAND_VALUE) {
 			// dealer busted
