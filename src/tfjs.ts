@@ -24,49 +24,34 @@ model.compile({
 	optimizer: tf.train.sgd(0.2)
 })
 
-const train = (runs: number, epochs: number) => {
-	const results = []
+export async function train(runs: number) {
 	for (let run = 0; run < runs; run++) {
 		const hitAmount = Math.floor(Math.random() * 3)
-		for (let hit = 0; !game.gameOver && hit < hitAmount; hit++) {
-			game.playerHit()
-		}
-		game.playerStand()
-		results.push(game.result)
+		play(game)
+		const result = game.result
 		game.resetGame()
-	}
 
-	// Generate some synthetic data for training.
-	const xs = []
-	const ys = []
-	results.forEach(r => {
-		xs.push([
-			r.state.dealer.value,
-			r.state.dealer.ace ? 1 : 0,
-			r.state.player.value,
-			r.state.player.ace ? 1 : 0
-		])
-		ys.push([r.reward])
-	})
+		// Generate some synthetic data from game
+		const xs = [[
+			result.state.dealer.value,
+			result.state.dealer.ace ? 1 : 0,
+			result.state.player.value,
+			result.state.player.ace ? 1 : 0
+		]]
+		const ys = [[result.reward]]
 
-	// Train the model using the data.
-	console.log('%c Training...', 'font-size: 16px')
-	model.fit(tf.tensor2d(xs), tf.tensor2d(ys), {
-		epochs: epochs,
-		shuffle: true
-	}).then((resp) => {
+		// Train the model using the data.
+		console.log('%c Training...', 'font-size: 16px')
+		const resp = await model.fit(tf.tensor2d(xs), tf.tensor2d(ys))
 		// Open the browser devtools to see the output
 		const loss = resp.history.loss[resp.history.loss.length - 1]
 		console.log(`%c Model Loss: ${loss}`, 'color: #6060e0; font-size: 18px;')
 		console.table(resp.history.loss)
 		// Use the model to do inference on a data point the model hasn't seen before:
-		document.querySelector('#train-button').classList.remove('is-loading')
-		document.querySelector('#play-button').disabled = false
-		document.querySelector('title').innerText = 'BlackjackRL'
-	})
+	}
 }
 
-const computer = (input: State) => {
+export function computer(input: State) {
 	const prediction = model.predict(tf.tensor2d([[
 		input.dealer.value,
 		input.dealer.ace ? 1 : 0,
@@ -76,4 +61,16 @@ const computer = (input: State) => {
 	return prediction.flatten().arraySync()[0]
 }
 
-export { computer, train }
+export function play(g: Game) {
+	const threshold = .5
+	while (!g.gameOver) {
+		const prediction = computer(g.state)
+		console.info(prediction)
+		if (prediction > threshold) g.playerStand()
+		else g.playerHit()
+	}
+	if (!g.gameOver) {
+		console.table(g.state)
+		console.info(g.result.reward)
+	}
+}

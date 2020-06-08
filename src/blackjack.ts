@@ -100,7 +100,6 @@ export class Game {
 	gameOver: boolean
 	gameResult: number
 
-	training: boolean
 	playerWins = 0
 	playerLosses = 0
 	playerDraws = 0
@@ -146,9 +145,8 @@ export class Game {
 				button.disabled = true
 			}
 			document.querySelector('#play-button').disabled = true
-			const train = this.training ? 0 : 1
-			let total = this.playerWins + this.playerLosses + this.playerDraws + train
-			stats.querySelector('#t').innerText = 1
+			let total = this.playerWins + this.playerLosses + this.playerDraws + 1
+			stats.querySelector('#t').innerText = total
 		})
 		this.resetGame()
 	}
@@ -229,7 +227,7 @@ export class Game {
 			}
 			this.gameOver = true
 			this.events.emit('game-finished')
-			if (!this.training) this.playerLosses++
+			this.playerLosses++
 			this.events.emit('player-lost')
 		}
 		this.events.emit('player-dealt')
@@ -265,7 +263,7 @@ export class Game {
 				console.log('Dealer bust!')
 				console.log('Player wins!')
 			}
-			if (!this.training) this.playerWins++
+			this.playerWins++
 			this.events.emit('player-won')
 		} else {
 			const dealerValue = this.bestValue(dealerHandValues)
@@ -273,15 +271,15 @@ export class Game {
 
 			if (dealerValue > playerValue) {
 				if (window.DEBUG) console.log('Player loses!')
-				if (!this.training) this.playerLosses++
+				this.playerLosses++
 				this.events.emit('player-lost')
 			} else if (dealerValue < playerValue) {
 				if (window.DEBUG) console.log('Player wins!')
-				if (!this.training) this.playerWins++
+				this.playerWins++
 				this.events.emit('player-won')
 			} else {
 				if (window.DEBUG) console.log('Draw!')
-				if (!this.training) this.playerDraws++
+				this.playerDraws++
 				this.events.emit('player-tied')
 			}
 		}

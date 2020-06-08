@@ -1,6 +1,6 @@
 import * as blackjack from './blackjack'
 import * as tf from '@tensorflow/tfjs'
-import { computer, train } from './tfjs'
+import { computer, train, play } from './tfjs'
 
 const trainButton: HTMLButtonElement = document.querySelector('#train-button')
 const playButton: HTMLButtonElement = document.querySelector('#play-button')
@@ -22,25 +22,17 @@ resetButton.onclick = _ => {
 	game.resetGame()
 }
 
-trainButton.onclick = _ => {
+trainButton.onclick = async _ => {
 	const title = document.querySelector('title')
 	title.innerText = 'BlackjackRL | Training'
 	trainButton.classList.add('is-loading')
 	playButton.disabled = true
-	train(1024, 32)
+	await train(1024)
+	trainButton.classList.remove('is-loading')
+	playButton.disabled = false
+	title.innerText = 'BlackjackRL'
 }
 
 playButton.onclick = _ => {
-	const threshold = .5
-	while (!game.gameOver) {
-		const prediction = 1 - computer(game.state)
-		console.log(`I'm ${ prediction * 100 }% sure I'll win if I stand.`)
-		console.info(prediction)
-		if (prediction < threshold) game.playerStand()
-		else game.playerHit()
-	}
-	if (!game.gameOver) {
-		console.table(game.state)
-		console.info(game.result.reward)
-	}
+	play(game)
 }

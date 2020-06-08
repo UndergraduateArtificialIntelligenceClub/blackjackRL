@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/UndergraduateArtificialIntelligenceClub/blackjackRL#readme",
   "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/plugin-transform-runtime": "^7.10.1",
     "@tensorflow/tfjs": "^2.0.0",
     "bulma": "^0.8.2",
     "cssnano": "^4.1.10",
@@ -32,6 +34,7 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
+    "@babel/runtime": "^7.10.2",
     "@fortawesome/fontawesome-free": "^5.13.0"
   }
 }
