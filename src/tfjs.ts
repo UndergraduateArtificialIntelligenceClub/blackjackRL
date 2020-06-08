@@ -1,7 +1,5 @@
 import * as tf from '@tensorflow/tfjs'
 import { Game, State } from './blackjack'
-const game = new Game()
-game.training = true
 
 // Define a model for linear regression.
 const model = tf.sequential()
@@ -25,6 +23,7 @@ model.compile({
 })
 
 export async function train(runs: number) {
+	const game = new Game()
 	for (let run = 0; run < runs; run++) {
 		const hitAmount = Math.floor(Math.random() * 3)
 		play(game)
