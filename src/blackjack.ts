@@ -100,6 +100,7 @@ export class Game {
 	gameOver: boolean
 	gameResult: number
 
+	training: boolean
 	playerWins = 0
 	playerLosses = 0
 	playerDraws = 0
@@ -145,7 +146,8 @@ export class Game {
 				button.disabled = true
 			}
 			document.querySelector('#play-button').disabled = true
-			let total = this.playerWins + this.playerLosses + this.playerDraws + 1
+			const train = this.training ? 0 : 1
+			let total = this.playerWins + this.playerLosses + this.playerDraws + train
 			stats.querySelector('#t').innerText = 1
 		})
 		this.resetGame()
@@ -227,7 +229,7 @@ export class Game {
 			}
 			this.gameOver = true
 			this.events.emit('game-finished')
-			this.playerLosses++
+			if (!this.training) this.playerLosses++
 			this.events.emit('player-lost')
 		}
 		this.events.emit('player-dealt')
@@ -263,7 +265,7 @@ export class Game {
 				console.log('Dealer bust!')
 				console.log('Player wins!')
 			}
-			this.playerWins++
+			if (!this.training) this.playerWins++
 			this.events.emit('player-won')
 		} else {
 			const dealerValue = this.bestValue(dealerHandValues)
@@ -271,15 +273,15 @@ export class Game {
 
 			if (dealerValue > playerValue) {
 				if (window.DEBUG) console.log('Player loses!')
-				this.playerLosses++
+				if (!this.training) this.playerLosses++
 				this.events.emit('player-lost')
 			} else if (dealerValue < playerValue) {
 				if (window.DEBUG) console.log('Player wins!')
-				this.playerWins++
+				if (!this.training) this.playerWins++
 				this.events.emit('player-won')
 			} else {
 				if (window.DEBUG) console.log('Draw!')
-				this.playerDraws++
+				if (!this.training) this.playerDraws++
 				this.events.emit('player-tied')
 			}
 		}
@@ -352,12 +354,20 @@ export class Game {
 		}
 		state.player.value = 0
 		state.player.ace = false
-		for (const playerCard of this.playerHand) {
+		let playerCards
+		if (this.gameOver) {
+			playerCards = this.playerHand.slice(0, this.playerHand.length - 1)
+		} else {
+			playerCards = this.playerHand
+		}
+		for (const playerCard of playerCards) {
 			if (playerCard.rank != Rank.ace) {
 				state.player.value += playerCard.value
+			} else {
+				if (state.player.ace) {
+					state.player.value += playerCard.value
+				}
 				state.player.ace = true
-			} else if (state.player.ace) {
-				state.player.value += playerCard.value
 			}
 		}
 		return state

@@ -1,27 +1,32 @@
 import * as tf from '@tensorflow/tfjs'
 import { Game, State } from './blackjack'
 const game = new Game()
+game.training = true
 
 // Define a model for linear regression.
 const model = tf.sequential()
 model.add(tf.layers.dense({
-	units: 21,
-	activation: 'sigmoid',
+	units: 6,
+	activation: 'relu',
 	inputShape: [4]
 }))
 model.add(tf.layers.dense({
+	units: 3,
+	activation: 'tanh'
+}))
+model.add(tf.layers.dense({
 	units: 1,
-	activation: 'sigmoid'
+	activation: 'tanh'
 }))
 
 model.compile({
 	loss: tf.losses.meanSquaredError,
-	optimizer: tf.train.sgd(0.1)
+	optimizer: tf.train.sgd(0.2)
 })
 
-const train = (RUNS: number) => {
+const train = (runs: number, epochs: number) => {
 	const results = []
-	for (let run = 0; run < RUNS; run++) {
+	for (let run = 0; run < runs; run++) {
 		const hitAmount = Math.floor(Math.random() * 3)
 		for (let hit = 0; !game.gameOver && hit < hitAmount; hit++) {
 			game.playerHit()
@@ -47,7 +52,7 @@ const train = (RUNS: number) => {
 	// Train the model using the data.
 	console.log('%c Training...', 'font-size: 16px')
 	model.fit(tf.tensor2d(xs), tf.tensor2d(ys), {
-		epochs: 10,
+		epochs: epochs,
 		shuffle: true
 	}).then((resp) => {
 		// Open the browser devtools to see the output
@@ -57,6 +62,7 @@ const train = (RUNS: number) => {
 		// Use the model to do inference on a data point the model hasn't seen before:
 		document.querySelector('#train-button').classList.remove('is-loading')
 		document.querySelector('#play-button').disabled = false
+		document.querySelector('title').innerText = 'BlackjackRL'
 	})
 }
 
@@ -67,7 +73,7 @@ const computer = (input: State) => {
 		input.player.value,
 		input.player.ace ? 1 : 0
 	]]))
-	return prediction.arraySync()[0][0]
+	return prediction.flatten().arraySync()[0]
 }
 
 export { computer, train }
