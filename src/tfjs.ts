@@ -1,5 +1,5 @@
 import * as tf from '@tensorflow/tfjs'
-import { Game } from './blackjack'
+import { Game, State } from './blackjack'
 const game = new Game()
 
 // Define a model for linear regression.
@@ -7,7 +7,7 @@ const model = tf.sequential()
 model.add(tf.layers.dense({
 	units: 21,
 	activation: 'sigmoid',
-	inputShape: [10]
+	inputShape: [4]
 }))
 model.add(tf.layers.dense({
 	units: 1,
@@ -23,7 +23,7 @@ const train = (RUNS: number) => {
 	const results = []
 	for (let run = 0; run < RUNS; run++) {
 		const hitAmount = Math.floor(Math.random() * 3)
-		for (let hit = 0; hit < hitAmount; hit++) {
+		for (let hit = 0; !game.gameOver && hit < hitAmount; hit++) {
 			game.playerHit()
 		}
 		game.playerStand()
@@ -35,14 +35,19 @@ const train = (RUNS: number) => {
 	const xs = []
 	const ys = []
 	results.forEach(r => {
-		xs.push(r.state)
+		xs.push([
+			r.state.dealer.value,
+			r.state.dealer.ace ? 1 : 0,
+			r.state.player.value,
+			r.state.player.ace ? 1 : 0
+		])
 		ys.push([r.reward])
 	})
 
 	// Train the model using the data.
 	console.log('%c Training...', 'font-size: 16px')
 	model.fit(tf.tensor2d(xs), tf.tensor2d(ys), {
-		epochs: 10
+		epochs: 10,
 		shuffle: true
 	}).then((resp) => {
 		// Open the browser devtools to see the output
@@ -55,8 +60,13 @@ const train = (RUNS: number) => {
 	})
 }
 
-const computer = (input: Array<number>) => {
-	const prediction = model.predict(tf.tensor2d([input]))
+const computer = (input: State) => {
+	const prediction = model.predict(tf.tensor2d([[
+		input.dealer.value,
+		input.dealer.ace ? 1 : 0,
+		input.player.value,
+		input.player.ace ? 1 : 0
+	]]))
 	return prediction.arraySync()[0][0]
 }
 

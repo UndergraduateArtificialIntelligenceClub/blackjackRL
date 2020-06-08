@@ -23,6 +23,17 @@ export enum Rank {
 	king
 }
 
+export interface State {
+	dealer: {
+		value: number,
+		ace: boolean
+	},
+	player: {
+		value: number,
+		ace: boolean
+	}
+}
+
 export class Card {
 	value: number
 	repr: string
@@ -116,23 +127,24 @@ export class Game {
 		this.events.on('player-won' _ => {
 			title.innerText = 'You won! 😁'
 			stats.querySelector('#w').innerText = this.playerWins
-			this.gameResult = 10
+			this.gameResult = 1
 		})
 		this.events.on('player-lost' _ => {
 			title.innerText = 'You lost! 🙁'
 			stats.querySelector('#l').innerText = this.playerLosses
 			this.events.emit('dealer-dealt')
-			this.gameResult = -5
+			this.gameResult = -1
 		})
 		this.events.on('player-tied' _ => {
 			title.innerText = 'You tied! 😶'
 			stats.querySelector('#d').innerText = this.playerDraws
-			this.gameResult = 1
+			this.gameResult = .5
 		})
 		this.events.on('game-finished', _ => {
 			for (const button of document.querySelectorAll('button.is-light')) {
 				button.disabled = true
 			}
+			document.querySelector('#play-button').disabled = true
 			let total = this.playerWins + this.playerLosses + this.playerDraws + 1
 			stats.querySelector('#t').innerText = 1
 		})
@@ -174,6 +186,7 @@ export class Game {
 		for (const button of document.querySelectorAll('button.is-light')) {
 			button.disabled = false
 		}
+		document.querySelector('#play-button').disabled = false
 		document.querySelector('#blackjack-state').innerText = 'Playing 🃏'
 	}
 
@@ -328,22 +341,31 @@ export class Game {
 		return cards
 	}
 
-	get state(): Array<number> {
-		const cards = []
-		cards.push(this.dealerHand[0].value)
+	get state(): State {
+		const state: State = { dealer: {}, player: {} }
+		if (this.dealerHand[0].rank != Rank.ace) {
+			state.dealer.value = this.dealerHand[0].value
+			state.dealer.ace = false
+		} else {
+			state.dealer.value = 0
+			state.dealer.ace = true
+		}
+		state.player.value = 0
+		state.player.ace = false
 		for (const playerCard of this.playerHand) {
-			cards.push(playerCard.value)
+			if (playerCard.rank != Rank.ace) {
+				state.player.value += playerCard.value
+				state.player.ace = true
+			} else if (state.player.ace) {
+				state.player.value += playerCard.value
+			}
 		}
-		// fill the rest with empty values
-		for (let i = cards.length; i < 10; i++) {
-			cards.push(0)
-		}
-		return cards
+		return state
 	}
 
-	get result(): {state: Array<number>, reward: number} {
+	get result(): {state: State, reward: number} {
 		const state = this.state
 		const reward = this.gameResult
-		return {state, reward}
+		return { state, reward }
 	}
 }

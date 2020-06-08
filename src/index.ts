@@ -29,11 +29,12 @@ trainButton.onclick = _ => {
 }
 
 playButton.onclick = _ => {
-	const threshold = .8
+	const threshold = .9
 	while (!game.gameOver) {
-		const prediction = computer(game.state)
-		console.log(prediction)
-		if (prediction > threshold) game.playerStand()
+		const prediction = 1 - computer(game.state)
+		console.log(`I'm ${ Math.round(prediction * 100) }% sure I should hit`)
+		console.info(prediction)
+		if (prediction < threshold) game.playerStand()
 		else game.playerHit()
 	}
 }
