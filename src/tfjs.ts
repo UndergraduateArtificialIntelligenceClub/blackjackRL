@@ -14,7 +14,7 @@ model.add(tf.layers.dense({
 }))
 model.add(tf.layers.dense({
 	units: 1,
-	activation: 'tanh'
+	activation: 'relu'
 }))
 
 model.compile({
