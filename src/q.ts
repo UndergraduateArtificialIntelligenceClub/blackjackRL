@@ -27,7 +27,7 @@ export async function train(runs: number) {
     for (let _ = 0; _ < runs; _++) {
         dealerCard = game.dealerHand[0].value;
         while (!game.gameOver) {
-                // pick random action in random direction
+            // pick random action in random direction
             let values = game.getHandValues(game.playerHand)
             values = Array.from(values).filter(num => num <= 21);
 
@@ -70,6 +70,8 @@ export async function train(runs: number) {
         }
 
         game.resetGame()
+
+        // Estimate ability of bot
         if (_ % 1000 == 0) {
             let totalWins = 0, totalGames = 100
             for (let __ = 0; __ < totalGames; __++) {
@@ -80,6 +82,7 @@ export async function train(runs: number) {
             game.resetGame()
         }
 
+        // Sleep every so often to not tank browser performance
         if (_ % 20 == 0)
             await new Promise(resolve => setTimeout(resolve, 1));
 
