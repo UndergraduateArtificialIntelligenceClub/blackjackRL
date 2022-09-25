@@ -1,6 +1,6 @@
 import * as blackjack from './blackjack'
 import * as tf from '@tensorflow/tfjs'
-import { computer, train, play } from './tfjs'
+import { train, play } from './q'
 
 const trainButton: HTMLButtonElement = document.querySelector('#train-button')
 const playButton: HTMLButtonElement = document.querySelector('#play-button')
@@ -27,7 +27,7 @@ trainButton.onclick = async _ => {
 	title.innerText = 'BlackjackRL | Training'
 	trainButton.classList.add('is-loading')
 	playButton.disabled = true
-	await train(1024)
+	await train(200000)
 	trainButton.classList.remove('is-loading')
 	playButton.disabled = false
 	title.innerText = 'BlackjackRL'
